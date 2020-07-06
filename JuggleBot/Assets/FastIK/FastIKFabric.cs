@@ -1,4 +1,6 @@
 ﻿#if UNITY_EDITOR
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 #endif
 using UnityEngine;
@@ -20,6 +22,8 @@ namespace DitzelGames.FastIK
         /// </summary>
         public Transform Target;
         public Transform Pole;
+
+        public Transform Ball;
 
         /// <summary>
         /// Solver iterations per update
@@ -130,6 +134,25 @@ namespace DitzelGames.FastIK
             //  (bone0) (bonelen 0) (bone1) (bonelen 1) (bone2)...
             //   x--------------------x--------------------x---...
 
+            Vector3 ballPosition = Ball.position;
+
+            if ((ballPosition - GetPositionRootSpace(Bones[0])).sqrMagnitude <= CompleteLength * CompleteLength)
+            {
+                //Target.transform.position = ballPosition;
+                //Pole.transform.position = ballPosition;
+                StartCoroutine(MoveTowardsBall(Target));
+                StartCoroutine(MoveTowardsBall(Pole));
+            }
+
+
+
+            if ((ballPosition - GetPositionRootSpace(Bones[0])).sqrMagnitude >= 1)
+            {
+
+            }
+
+
+
             //get position
             for (int i = 0; i < Bones.Length; i++)
                 Positions[i] = GetPositionRootSpace(Bones[i]);
@@ -230,6 +253,13 @@ namespace DitzelGames.FastIK
             else
                 current.rotation = Root.rotation * rotation;
         }
+
+        IEnumerator MoveTowardsBall(Transform ObjectMoving)
+      {
+            ObjectMoving.transform.position = Vector3.MoveTowards(ObjectMoving.position, Ball.position - new Vector3(0,1,0), 1);
+            yield return null;
+      }
+        
 
         void OnDrawGizmos()
         {

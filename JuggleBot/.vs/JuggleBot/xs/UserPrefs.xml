@@ -1,0 +1,30 @@
+﻿<Properties StartupConfiguration="{9EBCEABE-DBCB-5334-53E2-787F4C5B32C9}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BallController.cs">
+    <Files>
+      <File FileName="Assets/Scripts/TargetScript.cs" Line="1" Column="1" />
+      <File FileName="Assets/FastIK/FastIKFabric.cs" Line="135" Column="67" />
+      <File FileName="Assets/Scripts/BallController.cs" Line="22" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="JuggleBot" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="FastIK" expanded="True">
+                <Node name="FastIKFabric.cs" selected="True" />
+              </Node>
+              <Node name="Scripts" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="770a99cf-ac57-4f96-877f-e4a5cd6612f2" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
