@@ -22,7 +22,8 @@ namespace DitzelGames.FastIK
         /// </summary>
         public Transform Target;
         public Transform Pole;
-
+        
+        //I'd recommend moving this elsewhere! -Kevin
         public Transform Ball;
 
         /// <summary>
