@@ -111,7 +111,7 @@ public class JuggleController : MonoBehaviour
         print (totalCount);
         Vector3 ballLocation = new Vector3(Ball.position.x, -3.04f, Ball.position.z);
 
-        Target.position = Vector3.MoveTowards(Target.position, ballLocation, 1);
+        Target.position = Vector3.MoveTowards(Target.position, ballLocation, 0.2f);
 
         yield return null;
     }
