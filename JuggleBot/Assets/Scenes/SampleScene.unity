@@ -539,12 +539,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1099960295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3324673b25f78364a9a0cde01ec9f2e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 6116cd12e74efd54fae8cec12239ced7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ThrowingPower_left: {x: 0, y: 60, z: -30}
   ThrowingPower_right: {x: 0, y: 60, z: 30}
-  time: 0.9
+  time: 0.95
   timeBetweenThrows: 1.7
   Ball_Two: {fileID: 1027340399}
   Ball_Three: {fileID: 1577964947}
