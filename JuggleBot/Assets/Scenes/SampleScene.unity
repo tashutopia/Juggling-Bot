@@ -204,18 +204,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &100779801 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8771368696059445732, guid: c39fb9887f5f5ad4c8beb80d56d8038d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1894193267}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &146840666 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8771368696059445732, guid: c39fb9887f5f5ad4c8beb80d56d8038d,
-    type: 3}
-  m_PrefabInstance: {fileID: 454544555}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &454544555
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -517,23 +505,11 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1027340397}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1027340399 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7130425792412638433, guid: e44f13fde76a5d443845275fa68391b6,
-    type: 3}
-  m_PrefabInstance: {fileID: 1027340397}
-  m_PrefabAsset: {fileID: 0}
 --- !u!54 &1027340400 stripped
 Rigidbody:
   m_CorrespondingSourceObject: {fileID: 7130425792412638459, guid: e44f13fde76a5d443845275fa68391b6,
     type: 3}
   m_PrefabInstance: {fileID: 1027340397}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1099960295 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7130425792412638433, guid: e44f13fde76a5d443845275fa68391b6,
-    type: 3}
-  m_PrefabInstance: {fileID: 1980001159}
   m_PrefabAsset: {fileID: 0}
 --- !u!54 &1099960297 stripped
 Rigidbody:
@@ -551,7 +527,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1179742207}
   - component: {fileID: 1179742206}
-  - component: {fileID: 1179742208}
   m_Layer: 0
   m_Name: Brain
   m_TagString: Untagged
@@ -571,8 +546,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12d2fc28388eb864b94a7946c292f96c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftArm: {fileID: 100779801}
-  rightArm: {fileID: 146840666}
   LeftTarget: {fileID: 1739063629}
   RightTarget: {fileID: 799911901}
   Ball1: {fileID: 1189058148}
@@ -581,6 +554,9 @@ MonoBehaviour:
   Ball1RB: {fileID: 1099960297}
   Ball2RB: {fileID: 1027340400}
   Ball3RB: {fileID: 1577964948}
+  ThrowingPower_left: {x: 0, y: 45, z: -20}
+  ThrowingPower_right: {x: 0, y: 45, z: 20}
+  time: 0.95
 --- !u!4 &1179742207
 Transform:
   m_ObjectHideFlags: 0
@@ -595,30 +571,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1179742208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1179742205}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa74db85ecb869a4db2b30abe9758514, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ThrowingPower_left: {x: 0, y: 60, z: -30}
-  ThrowingPower_right: {x: 0, y: 60, z: 30}
-  time: 0.95
-  timeBetweenThrows: 1.7
-  Ball_One: {fileID: 1099960295}
-  Ball_Two: {fileID: 1027340399}
-  Ball_Three: {fileID: 1577964947}
-  Target_Left: {fileID: 1739063625}
-  Target_Right: {fileID: 799911897}
-  rb_one: {fileID: 1099960297}
-  rb_two: {fileID: 1027340400}
-  rb_three: {fileID: 1577964948}
 --- !u!4 &1189058148 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
@@ -708,12 +660,6 @@ PrefabInstance:
 --- !u!4 &1577964946 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
-    type: 3}
-  m_PrefabInstance: {fileID: 1577964945}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1577964947 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7130425792412638433, guid: e44f13fde76a5d443845275fa68391b6,
     type: 3}
   m_PrefabInstance: {fileID: 1577964945}
   m_PrefabAsset: {fileID: 0}

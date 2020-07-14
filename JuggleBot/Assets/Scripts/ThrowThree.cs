@@ -20,6 +20,7 @@ public class ThrowThree : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+ 
         rb_one = Ball_One.GetComponent<Rigidbody>();
         rb_two = Ball_Two.GetComponent<Rigidbody>();
         rb_three = Ball_Three.GetComponent<Rigidbody>();
@@ -27,11 +28,13 @@ public class ThrowThree : MonoBehaviour
         rb_one.useGravity = false;
         rb_two.useGravity = false;
         rb_three.useGravity = false;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+ 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             print("throw one");
@@ -41,10 +44,12 @@ public class ThrowThree : MonoBehaviour
         {
             StartCoroutine(Throw_Two());
         }
+
     }
 
     IEnumerator Throw_One()
     {
+   
         rb_one.useGravity = true;
         rb_one.AddForce(ThrowingPower_left, ForceMode.Impulse);
         yield return new WaitForSeconds(time);
@@ -58,6 +63,7 @@ public class ThrowThree : MonoBehaviour
         //Throws the purple ball towards the left hand
         yield return new WaitForSeconds(timeBetweenThrows);
         StartCoroutine(Throw_Two());
+        
     }
 
     IEnumerator Throw_Two()

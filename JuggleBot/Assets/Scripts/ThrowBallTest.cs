@@ -19,7 +19,7 @@ public class ThrowBallTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            check = true;
+            //check = true;
         }
     }
     // Update is called once per frame

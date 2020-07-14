@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class JuggleController : MonoBehaviour
 {
-    public GameObject leftArm;
-    public GameObject rightArm;
-
     public Transform LeftTarget;
     public Transform RightTarget;
 
@@ -18,7 +15,11 @@ public class JuggleController : MonoBehaviour
     public Rigidbody Ball2RB;
     public Rigidbody Ball3RB;
 
-    private int totalCount = 1;
+    public Vector3 ThrowingPower_left = new Vector3();
+    public Vector3 ThrowingPower_right = new Vector3();
+    public float time;
+
+    private int totalCount = 1;     //which catch we are currently on
     private Transform BallBeingThrown;
     private Rigidbody BallBeingThrown_RB;
     private int targetArm;
@@ -29,18 +30,20 @@ public class JuggleController : MonoBehaviour
     {
         BallBeingThrown = Ball1;
         BallBeingThrown_RB = Ball1RB;
+
+        Ball1RB.useGravity = false;
+        Ball2RB.useGravity = false;
+        Ball3RB.useGravity = false;
+        ballThrown = true;
+        StartCoroutine(Throw_One());
     }
 
     // Update is called once per frame
     void Update()
     {
+        print(totalCount);
         findTargetArm();
-        findTotalCount();
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ballThrown = true;
-        }
+        findIfBallCaught();
 
         if (targetArm == 1)
         {
@@ -64,6 +67,7 @@ public class JuggleController : MonoBehaviour
                 StopCoroutine(MoveTowardsBall(LeftTarget, BallBeingThrown));
             }
         }
+
     }
 
     void findTargetArm()
@@ -82,6 +86,7 @@ public class JuggleController : MonoBehaviour
     {
         if (BallBeingThrown == Ball1)
         {
+
             BallBeingThrown = Ball2;
             BallBeingThrown_RB = Ball2RB;
         }
@@ -97,23 +102,80 @@ public class JuggleController : MonoBehaviour
         }
     }
 
-    void findTotalCount()
+    void findIfBallCaught()
     {
         float speedOfBall = BallBeingThrown_RB.velocity.magnitude;
-        if(ballThrown && speedOfBall == 0){
+
+        if (ballThrown && System.Math.Abs(speedOfBall - 0)<.5)
+        {
             totalCount++;
+
+            if (targetArm == 1)  //sets ball as a child of the target to attach it to the hand when caught
+            {
+                BallBeingThrown.parent = RightTarget;
+                print("Right Target Parent");
+            }
+            else
+            {
+                BallBeingThrown.parent = LeftTarget;
+                print("Left Target Parent");
+            }
+
+            StartCoroutine(ThrowWhenCaught(BallBeingThrown_RB));
             findBallBeingThrown();
         }
     }
 
+
+    IEnumerator ThrowWhenCaught(Rigidbody objectCaught)
+    {
+        yield return new WaitForSeconds(.2f);
+        if (targetArm == 0)
+        {
+            StartCoroutine(MoveTowardsPoint(RightTarget, 4f, RightTarget.position.y,-2.3f));
+            objectCaught.AddForce(ThrowingPower_right, ForceMode.Impulse);
+        }
+        else
+        {
+            StartCoroutine(MoveTowardsPoint(LeftTarget, 4f, LeftTarget.position.y, 0f));
+            objectCaught.AddForce(ThrowingPower_left, ForceMode.Impulse);
+        }
+
+        objectCaught.gameObject.transform.parent = null;
+    }
+
+
     IEnumerator MoveTowardsBall(Transform Target, Transform Ball)
     {
-        print (totalCount);
+       
         Vector3 ballLocation = new Vector3(Ball.position.x, -3.04f, Ball.position.z);
 
-        Target.position = Vector3.MoveTowards(Target.position, ballLocation, 0.2f);
+        Target.position = Vector3.MoveTowards(Target.position, ballLocation, 2f);
 
         yield return null;
+    }
+    IEnumerator MoveTowardsPoint(Transform Target,float x, float y, float z)
+    {
+        Vector3 GoalPoint = new Vector3(x, y, z);
+
+        Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.0001f);
+
+        yield return null;
+    }
+
+    IEnumerator Throw_One()
+    {
+        Ball1RB.useGravity = true;
+        Ball1RB.AddForce(ThrowingPower_left, ForceMode.Impulse);
+        yield return new WaitForSeconds(time);
+        //Throws the purple ball towards the right hand and waits for 0.5 seconds
+        Ball2RB.useGravity = true;
+        Ball2RB.AddForce(ThrowingPower_right, ForceMode.Impulse);
+        yield return new WaitForSeconds(time * 3 / 2);
+        //Throws the green ball towards the left hand and waits for 0.75 seconds
+        Ball3RB.useGravity = true;
+        Ball3RB.AddForce(ThrowingPower_left, ForceMode.Impulse);
+        //Throws the purple ball towards the left hand
     }
 
 }
