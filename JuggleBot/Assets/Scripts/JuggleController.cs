@@ -117,12 +117,14 @@ public class JuggleController : MonoBehaviour
             {
                 BallBeingThrown.parent = RightTarget;
                 BallInRightHand = true;
+                StartCoroutine(MoveTowardsPoint(RightTarget, 6f, RightTarget.position.y, -3.5f));
                 print("Right Target Parent");
             }
             else
             {
                 BallBeingThrown.parent = LeftTarget;
                 BallInLeftHand = true;
+                StartCoroutine(MoveTowardsPoint(LeftTarget, 6f, LeftTarget.position.y, 3.5f));
                 print("Left Target Parent");
             }
 
@@ -137,13 +139,11 @@ public class JuggleController : MonoBehaviour
         yield return new WaitForSeconds(.2f);
         if (targetArm == 0)
         {
-            StartCoroutine(MoveTowardsPoint(RightTarget, 4f, RightTarget.position.y,-2.3f));
             objectCaught.AddForce(ThrowingPower_right, ForceMode.Impulse);
             BallInRightHand = false;
         }
         else
         {
-            StartCoroutine(MoveTowardsPoint(LeftTarget, 4f, LeftTarget.position.y, 0f));
             objectCaught.AddForce(ThrowingPower_left, ForceMode.Impulse);
             BallInLeftHand = false;
         }
@@ -153,18 +153,25 @@ public class JuggleController : MonoBehaviour
 
     IEnumerator MoveTowardsBall(Transform Target, Transform Ball)
     {
-       
+
         Vector3 ballLocation = new Vector3(Ball.position.x, -3.04f, Ball.position.z);
 
         Target.position = Vector3.MoveTowards(Target.position, ballLocation, .5f);
 
         yield return null;
     }
-    IEnumerator MoveTowardsPoint(Transform Target,float x, float y, float z)
+
+    IEnumerator MoveTowardsPoint(Transform Target, float x, float y, float z)
     {
         Vector3 GoalPoint = new Vector3(x, y, z);
 
-        Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.2f);
+        while(Target.position != GoalPoint)
+        {
+            Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.5f);
+            yield return null;
+        }
+
+        print("moving back");
 
         yield return null;
     }
