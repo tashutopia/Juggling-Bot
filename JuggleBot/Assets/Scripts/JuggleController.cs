@@ -25,6 +25,9 @@ public class JuggleController : MonoBehaviour
     private int targetArm;
     private bool ballThrown = false;
 
+    bool BallInLeftHand = true;
+    bool BallInRightHand = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +48,7 @@ public class JuggleController : MonoBehaviour
         findTargetArm();
         findIfBallCaught();
 
-        if (targetArm == 1)
+        if (targetArm == 1 && !BallInRightHand)
         {
             if (BallBeingThrown.position.x != RightTarget.position.x || BallBeingThrown.position.z != RightTarget.position.z)
             {
@@ -56,7 +59,7 @@ public class JuggleController : MonoBehaviour
                 StopCoroutine(MoveTowardsBall(RightTarget, BallBeingThrown));
             }
         }
-        else if (targetArm == 0)
+        else if (targetArm == 0 && !BallInLeftHand)
         {
             if (BallBeingThrown.position != LeftTarget.position)
             {
@@ -113,11 +116,13 @@ public class JuggleController : MonoBehaviour
             if (targetArm == 1)  //sets ball as a child of the target to attach it to the hand when caught
             {
                 BallBeingThrown.parent = RightTarget;
+                BallInRightHand = true;
                 print("Right Target Parent");
             }
             else
             {
                 BallBeingThrown.parent = LeftTarget;
+                BallInLeftHand = true;
                 print("Left Target Parent");
             }
 
@@ -134,13 +139,14 @@ public class JuggleController : MonoBehaviour
         {
             StartCoroutine(MoveTowardsPoint(RightTarget, 4f, RightTarget.position.y,-2.3f));
             objectCaught.AddForce(ThrowingPower_right, ForceMode.Impulse);
+            BallInRightHand = false;
         }
         else
         {
             StartCoroutine(MoveTowardsPoint(LeftTarget, 4f, LeftTarget.position.y, 0f));
             objectCaught.AddForce(ThrowingPower_left, ForceMode.Impulse);
+            BallInLeftHand = false;
         }
-
         objectCaught.gameObject.transform.parent = null;
     }
 
@@ -150,7 +156,7 @@ public class JuggleController : MonoBehaviour
        
         Vector3 ballLocation = new Vector3(Ball.position.x, -3.04f, Ball.position.z);
 
-        Target.position = Vector3.MoveTowards(Target.position, ballLocation, 2f);
+        Target.position = Vector3.MoveTowards(Target.position, ballLocation, .5f);
 
         yield return null;
     }
@@ -158,7 +164,7 @@ public class JuggleController : MonoBehaviour
     {
         Vector3 GoalPoint = new Vector3(x, y, z);
 
-        Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.0001f);
+        Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.2f);
 
         yield return null;
     }
@@ -171,10 +177,12 @@ public class JuggleController : MonoBehaviour
         //Throws the purple ball towards the right hand and waits for 0.5 seconds
         Ball2RB.useGravity = true;
         Ball2RB.AddForce(ThrowingPower_right, ForceMode.Impulse);
+        BallInRightHand = false;
         yield return new WaitForSeconds(time * 3 / 2);
         //Throws the green ball towards the left hand and waits for 0.75 seconds
         Ball3RB.useGravity = true;
         Ball3RB.AddForce(ThrowingPower_left, ForceMode.Impulse);
+        BallInLeftHand = false;
         //Throws the purple ball towards the left hand
     }
 
