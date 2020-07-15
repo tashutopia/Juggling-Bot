@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa683cb11fe664fb39ee3ddb4279ba40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftHandTarget: {fileID: 0}
+  InitialTarget: {fileID: 0}
 --- !u!54 &7130425792412638459
 Rigidbody:
   m_ObjectHideFlags: 0

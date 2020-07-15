@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 8771368696125765530}
   - component: {fileID: 8771368696125765531}
   - component: {fileID: 8771368696125765532}
+  - component: {fileID: 3695298581672943455}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -392,10 +393,21 @@ MonoBehaviour:
   ChainLength: 2
   Target: {fileID: 8771368697027181064}
   Pole: {fileID: 8771368695137374491}
-  Ball: {fileID: 0}
   Iterations: 10
   Delta: 0.001
   SnapBackStrength: 1
+--- !u!114 &3695298581672943455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8771368696125765534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf00834e7dbdc44a8dd3d8a68c4a4fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8771368696408610784
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JuggleController : MonoBehaviour
+public class JuggleController : CatchDetector
 {
     public Transform LeftTarget;
     public Transform RightTarget;
@@ -15,18 +15,18 @@ public class JuggleController : MonoBehaviour
     public Rigidbody Ball2RB;
     public Rigidbody Ball3RB;
 
-    public Vector3 ThrowingPower_left = new Vector3();
-    public Vector3 ThrowingPower_right = new Vector3();
+    public Vector3 ThrowingPowerRightwards = new Vector3();
+    public Vector3 ThrowingPowerLeftwards = new Vector3();
     public float time;
 
-    private int totalCount = 1;     //which catch we are currently on
+
+    private int totalCount = 1;     // which catch we are currently on
+    private int targetArm;          // which arm are we throwing to (0 is left, 1 is right)
+    private bool ballInLeftHand = true;
+    private bool ballInRightHand = true;
+    private bool firstCycleDone;
     private Transform BallBeingThrown;
     private Rigidbody BallBeingThrown_RB;
-    private int targetArm;
-    private bool ballThrown = false;
-
-    bool BallInLeftHand = true;
-    bool BallInRightHand = true;
 
     // Start is called before the first frame update
     void Start()
@@ -37,18 +37,21 @@ public class JuggleController : MonoBehaviour
         Ball1RB.useGravity = false;
         Ball2RB.useGravity = false;
         Ball3RB.useGravity = false;
-        ballThrown = true;
-        StartCoroutine(Throw_One());
+
+        firstCycleDone = false;
+        StartCoroutine(ThrowOne());
     }
 
     // Update is called once per frame
     void Update()
     {
-        print(totalCount);
-        findTargetArm();
-        findIfBallCaught();
+        // print(totalCount);
+        if(CatchDetector.BallIsInHand)
+            print("Catch Detected");
+        FindTargetArm();
+        FindIfBallCaught();
 
-        if (targetArm == 1 && !BallInRightHand)
+        if (targetArm == 1 && !ballInRightHand)
         {
             if (BallBeingThrown.position.x != RightTarget.position.x || BallBeingThrown.position.z != RightTarget.position.z)
             {
@@ -59,7 +62,7 @@ public class JuggleController : MonoBehaviour
                 StopCoroutine(MoveTowardsBall(RightTarget, BallBeingThrown));
             }
         }
-        else if (targetArm == 0 && !BallInLeftHand)
+        else if (targetArm == 0 && !ballInLeftHand)
         {
             if (BallBeingThrown.position != LeftTarget.position)
             {
@@ -70,10 +73,9 @@ public class JuggleController : MonoBehaviour
                 StopCoroutine(MoveTowardsBall(LeftTarget, BallBeingThrown));
             }
         }
-
     }
 
-    void findTargetArm()
+    void FindTargetArm()
     {
         if (totalCount % 2 == 1)  // odd number throw
         {
@@ -85,7 +87,7 @@ public class JuggleController : MonoBehaviour
         }
     }
 
-    void findBallBeingThrown()
+    public void FindBallBeingThrown()   //sets BallBeingThrown (Target) and BallBeingThrown_RB (Rigidbody)
     {
         if (BallBeingThrown == Ball1)
         {
@@ -105,92 +107,84 @@ public class JuggleController : MonoBehaviour
         }
     }
 
-    void findIfBallCaught()
+    void FindIfBallCaught()
     {
-        float speedOfBall = BallBeingThrown_RB.velocity.magnitude;
-
-        if (ballThrown && System.Math.Abs(speedOfBall - 0)<.5)
+        if (firstCycleDone && CatchDetector.BallIsInHand)
         {
             totalCount++;
 
             if (targetArm == 1)  //sets ball as a child of the target to attach it to the hand when caught
             {
                 BallBeingThrown.parent = RightTarget;
-                BallInRightHand = true;
+                ballInRightHand = true;
                 StartCoroutine(MoveTowardsPoint(RightTarget, 6f, RightTarget.position.y, -3.5f));
-                print("Right Target Parent");
             }
             else
             {
                 BallBeingThrown.parent = LeftTarget;
-                BallInLeftHand = true;
+                ballInLeftHand = true;
                 StartCoroutine(MoveTowardsPoint(LeftTarget, 6f, LeftTarget.position.y, 3.5f));
-                print("Left Target Parent");
             }
 
             StartCoroutine(ThrowWhenCaught(BallBeingThrown_RB));
-            findBallBeingThrown();
+            FindBallBeingThrown();
+            CatchDetector.BallIsInHand = false;
         }
     }
-
-
-    IEnumerator ThrowWhenCaught(Rigidbody objectCaught)
-    {
-        yield return new WaitForSeconds(.2f);
-        if (targetArm == 0)
-        {
-            objectCaught.AddForce(ThrowingPower_right, ForceMode.Impulse);
-            BallInRightHand = false;
-        }
-        else
-        {
-            objectCaught.AddForce(ThrowingPower_left, ForceMode.Impulse);
-            BallInLeftHand = false;
-        }
-        objectCaught.gameObject.transform.parent = null;
-    }
-
 
     IEnumerator MoveTowardsBall(Transform Target, Transform Ball)
     {
+        Vector3 BallLocation = new Vector3(Ball.position.x, -3.04f, Ball.position.z);
 
-        Vector3 ballLocation = new Vector3(Ball.position.x, -3.04f, Ball.position.z);
-
-        Target.position = Vector3.MoveTowards(Target.position, ballLocation, .5f);
+        Target.position = Vector3.MoveTowards(Target.position, BallLocation, .5f);
 
         yield return null;
     }
 
-    IEnumerator MoveTowardsPoint(Transform Target, float x, float y, float z)
+    public IEnumerator MoveTowardsPoint(Transform Target, float x, float y, float z)
     {
         Vector3 GoalPoint = new Vector3(x, y, z);
 
         while(Target.position != GoalPoint)
         {
-            Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.5f);
+            Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.2f);
             yield return null;
         }
-
-        print("moving back");
 
         yield return null;
     }
 
-    IEnumerator Throw_One()
+    IEnumerator ThrowOne() // First Cycle
     {
         Ball1RB.useGravity = true;
-        Ball1RB.AddForce(ThrowingPower_left, ForceMode.Impulse);
+        Ball1RB.AddForce(ThrowingPowerRightwards, ForceMode.Impulse);
         yield return new WaitForSeconds(time);
-        //Throws the purple ball towards the right hand and waits for 0.5 seconds
+        //Throws Ball 1 towards the right hand and waits for <time> seconds
         Ball2RB.useGravity = true;
-        Ball2RB.AddForce(ThrowingPower_right, ForceMode.Impulse);
-        BallInRightHand = false;
+        Ball2RB.AddForce(ThrowingPowerLeftwards, ForceMode.Impulse);
+        ballInRightHand = false;
         yield return new WaitForSeconds(time * 3 / 2);
-        //Throws the green ball towards the left hand and waits for 0.75 seconds
+        //Throws Ball 2 towards the left hand and waits for <time * 3 / 2> seconds
         Ball3RB.useGravity = true;
-        Ball3RB.AddForce(ThrowingPower_left, ForceMode.Impulse);
-        BallInLeftHand = false;
-        //Throws the purple ball towards the left hand
+        Ball3RB.AddForce(ThrowingPowerRightwards, ForceMode.Impulse);
+        ballInLeftHand = false;
+        //Throws Ball 3 towards the right hand
+        firstCycleDone = true;
     }
 
+    public IEnumerator ThrowWhenCaught(Rigidbody objectCaught)
+    {
+        yield return new WaitForSeconds(.2f);
+        if (targetArm == 0)
+        {
+            objectCaught.AddForce(ThrowingPowerLeftwards, ForceMode.Impulse);
+            ballInRightHand = false;
+        }
+        else
+        {
+            objectCaught.AddForce(ThrowingPowerRightwards, ForceMode.Impulse);
+            ballInLeftHand = false;
+        }
+        objectCaught.gameObject.transform.parent = null;
+    }
 }
