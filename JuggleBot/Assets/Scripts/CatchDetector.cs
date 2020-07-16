@@ -23,11 +23,6 @@ public class CatchDetector : MonoBehaviour
         BallIsInHand = true;
     }
 
-    void OnCollisionStay(Collision collision)
-    {
-
-    }
-
     void OnCollisionExit(Collision collision)
     {
         BallIsInHand = false;
