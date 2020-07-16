@@ -7,9 +7,9 @@ public class BallController : MonoBehaviour
     public GameObject InitialTarget;
 
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
-
+        yield return null;
         transform.position = InitialTarget.transform.position + new Vector3(0, 1, 0);
     }
 

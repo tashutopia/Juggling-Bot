@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JuggleController : CatchDetector
 {
     public Transform LeftTarget;
     public Transform RightTarget;
+    public Text countText;
 
     public Transform Ball1;
     public Transform Ball2;
@@ -17,13 +19,15 @@ public class JuggleController : CatchDetector
 
     public Vector3 ThrowingPowerRightwards = new Vector3();
     public Vector3 ThrowingPowerLeftwards = new Vector3();
-    public float time;
+    public float time = 0.95f;
+    public float dwellTime;
+    public float startZPosition = 3f;
 
 
     private int totalCount = 1;     // which catch we are currently on
     private int targetArm;          // which arm are we throwing to (0 is left, 1 is right)
-    private bool ballInLeftHand = true;
-    private bool ballInRightHand = true;
+    private bool ballInLeftHand;
+    private bool ballInRightHand;
     private bool firstCycleDone;
     private Transform BallBeingThrown;
     private Rigidbody BallBeingThrown_RB;
@@ -31,23 +35,27 @@ public class JuggleController : CatchDetector
     // Start is called before the first frame update
     void Start()
     {
+        LeftTarget.position = new Vector3(6f, LeftTarget.position.y, startZPosition);
+        RightTarget.position = new Vector3(6f, RightTarget.position.y, -1 * startZPosition);
+
         BallBeingThrown = Ball1;
         BallBeingThrown_RB = Ball1RB;
 
+        ballInLeftHand = true;
+        ballInRightHand = true;
         Ball1RB.useGravity = false;
         Ball2RB.useGravity = false;
         Ball3RB.useGravity = false;
-
         firstCycleDone = false;
+
+        SetCountText();
         StartCoroutine(ThrowOne());
     }
 
     // Update is called once per frame
     void Update()
     {
-        // print(totalCount);
-        if(CatchDetector.BallIsInHand)
-            print("Catch Detected");
+        SetCountText();
         FindTargetArm();
         FindIfBallCaught();
 
@@ -112,18 +120,20 @@ public class JuggleController : CatchDetector
         if (firstCycleDone && CatchDetector.BallIsInHand)
         {
             totalCount++;
+            BallBeingThrown_RB.velocity = new Vector3(0, 0, 0);
+            BallBeingThrown_RB.useGravity = false;
 
             if (targetArm == 1)  //sets ball as a child of the target to attach it to the hand when caught
             {
                 BallBeingThrown.parent = RightTarget;
                 ballInRightHand = true;
-                StartCoroutine(MoveTowardsPoint(RightTarget, 6f, RightTarget.position.y, -3.5f));
+                StartCoroutine(MoveTowardsPoint(RightTarget, 6f, RightTarget.position.y, -1 * startZPosition));
             }
             else
             {
                 BallBeingThrown.parent = LeftTarget;
                 ballInLeftHand = true;
-                StartCoroutine(MoveTowardsPoint(LeftTarget, 6f, LeftTarget.position.y, 3.5f));
+                StartCoroutine(MoveTowardsPoint(LeftTarget, 6f, LeftTarget.position.y, startZPosition));
             }
 
             StartCoroutine(ThrowWhenCaught(BallBeingThrown_RB));
@@ -163,7 +173,7 @@ public class JuggleController : CatchDetector
         Ball2RB.useGravity = true;
         Ball2RB.AddForce(ThrowingPowerLeftwards, ForceMode.Impulse);
         ballInRightHand = false;
-        yield return new WaitForSeconds(time * 3 / 2);
+        yield return new WaitForSeconds(time);
         //Throws Ball 2 towards the left hand and waits for <time * 3 / 2> seconds
         Ball3RB.useGravity = true;
         Ball3RB.AddForce(ThrowingPowerRightwards, ForceMode.Impulse);
@@ -174,7 +184,8 @@ public class JuggleController : CatchDetector
 
     public IEnumerator ThrowWhenCaught(Rigidbody objectCaught)
     {
-        yield return new WaitForSeconds(.2f);
+        yield return new WaitForSeconds(dwellTime);
+        objectCaught.useGravity = true;
         if (targetArm == 0)
         {
             objectCaught.AddForce(ThrowingPowerLeftwards, ForceMode.Impulse);
@@ -186,5 +197,9 @@ public class JuggleController : CatchDetector
             ballInLeftHand = false;
         }
         objectCaught.gameObject.transform.parent = null;
+    }
+
+    void SetCountText(){
+        countText.text = "Catch Number: " + totalCount.ToString();
     }
 }
