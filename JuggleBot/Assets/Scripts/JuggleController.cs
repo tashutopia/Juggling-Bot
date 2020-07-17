@@ -22,6 +22,10 @@ public class JuggleController : CatchDetector
     public float time = 0.95f;
     public float dwellTime;
     public float startZPosition = 3f;
+
+    public float positionThrowArmSpeed = 0.5f;
+    public float velocityThrowArmSpeed = 0.2f;
+
     public bool limitZPosition = false;
     public bool limitXPosition = false;
 
@@ -186,7 +190,7 @@ public class JuggleController : CatchDetector
 
         while(Target.position != BallLocation)
         {
-            Target.position = Vector3.MoveTowards(Target.position, BallLocation, 0.5f);
+            Target.position = Vector3.MoveTowards(Target.position, BallLocation, positionThrowArmSpeed);
         }
 
         yield return null;
@@ -196,7 +200,7 @@ public class JuggleController : CatchDetector
     {
         while(Target.position != GoalPoint)
         {
-            Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.2f);
+            Target.position = Vector3.MoveTowards(Target.position, GoalPoint, velocityThrowArmSpeed);
             yield return null;
         }
 
@@ -266,6 +270,6 @@ public class JuggleController : CatchDetector
     }
 
     void SetCountText(){
-        countText.text = "Catch Number: " + totalCount.ToString();
+        countText.text = "Number of Completed Catches: " + count.ToString();
     }
 }

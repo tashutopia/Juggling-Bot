@@ -312,6 +312,11 @@ PrefabInstance:
       propertyPath: time
       value: 0.95
       objectReference: {fileID: 0}
+    - target: {fileID: 8771368695137374489, guid: c39fb9887f5f5ad4c8beb80d56d8038d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8771368696059445728, guid: c39fb9887f5f5ad4c8beb80d56d8038d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -591,12 +596,12 @@ MonoBehaviour:
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 6
-    m_AlignByGeometry: 0
+    m_AlignByGeometry: 1
     m_RichText: 0
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Catch Number: '
+  m_Text: 'Number of Completed Catches: '
 --- !u!222 &942898531
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -617,6 +622,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7130425792412638436, guid: e44f13fde76a5d443845275fa68391b6,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2e50d46555ef4e4408bab273f8c05fd4, type: 2}
     - target: {fileID: 7130425792412638438, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
       propertyPath: LeftHandTarget
@@ -635,7 +645,7 @@ PrefabInstance:
     - target: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0935003
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
@@ -812,6 +822,8 @@ MonoBehaviour:
   time: 0.95
   dwellTime: 0.3
   startZPosition: 3
+  positionThrowArmSpeed: 0.5
+  velocityThrowArmSpeed: 0.2
   limitZPosition: 0
   limitXPosition: 0
 --- !u!4 &1179742207
@@ -853,6 +865,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7130425792412638436, guid: e44f13fde76a5d443845275fa68391b6,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 13885821ddd462e4d81e0efe0e22d127, type: 2}
     - target: {fileID: 7130425792412638438, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
       propertyPath: LeftHandTarget
@@ -871,7 +888,7 @@ PrefabInstance:
     - target: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0935003
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
@@ -1080,6 +1097,11 @@ PrefabInstance:
       propertyPath: Ball3RB
       value: 
       objectReference: {fileID: 1577964948}
+    - target: {fileID: 8771368695137374489, guid: c39fb9887f5f5ad4c8beb80d56d8038d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8771368696059445728, guid: c39fb9887f5f5ad4c8beb80d56d8038d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1188,12 +1210,12 @@ PrefabInstance:
     - target: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.5483828
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0935003
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7130425792412638458, guid: e44f13fde76a5d443845275fa68391b6,
         type: 3}
