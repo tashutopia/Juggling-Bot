@@ -22,8 +22,14 @@ public class JuggleController : CatchDetector
     public float time = 0.95f;
     public float dwellTime;
     public float startZPosition = 3f;
+
+    public float positionThrowArmSpeed = 0.5f;
+    public float velocityThrowArmSpeed = 0.2f;
+
     public bool limitZPosition = false;
     public bool limitXPosition = false;
+    public bool nudgeTest = false;
+    public bool varyThrowingPower = false;
 
     public static int totalCount = 1;     // which catch we are currently on
     private int targetArm;                // which arm are we throwing to (0 is left, 1 is right)
@@ -63,6 +69,7 @@ public class JuggleController : CatchDetector
 
         SetCountText();
         StartCoroutine(ThrowOne());
+       
     }
 
     // Update is called once per frame
@@ -122,6 +129,8 @@ public class JuggleController : CatchDetector
     {
         if (firstCycleDone && CatchDetector.BallIsInHand)
         {
+
+
             totalCount++;
             count++;
             SetCountText();
@@ -150,7 +159,27 @@ public class JuggleController : CatchDetector
 
             StartCoroutine(ThrowWhenCaught(BallBeingThrown_RB));
             FindBallBeingThrown();
-            CatchDetector.BallIsInHand = false;
+
+            if (nudgeTest)
+            {
+                int affectedBall = Random.Range(0, 2) + 1;
+                print(affectedBall);
+                float uporDown = .25f * (Random.Range(0, 2) - 1);
+                if (affectedBall == 1)
+                {
+                    Ball1.position = new Vector3(Ball1.position.x, Ball1.position.y, Ball1.position.z + uporDown);
+                }
+                if (affectedBall == 2)
+                {
+                    Ball2.position = new Vector3(Ball2.position.x, Ball2.position.y, Ball2.position.z + uporDown);
+                }
+                if (affectedBall == 3)
+                {
+                    Ball3.position = new Vector3(Ball3.position.x, Ball3.position.y, Ball3.position.z + uporDown);
+                }
+            }
+            
+                        CatchDetector.BallIsInHand = false;
         }
     }
 
@@ -164,7 +193,7 @@ public class JuggleController : CatchDetector
 
         float trajectoryTime = (2.0f * yVelocity) / 9.81f;
         float deltaZ = trajectoryTime * zVelocity;
-        float zPosition = deltaZ * 1.03f + initialPosition.z;
+        float zPosition = deltaZ + initialPosition.z;
 
         // print("zVelocity: " + zVelocity);
         // print("yVelocity: " + yVelocity);
@@ -186,7 +215,7 @@ public class JuggleController : CatchDetector
 
         while(Target.position != BallLocation)
         {
-            Target.position = Vector3.MoveTowards(Target.position, BallLocation, 0.5f);
+            Target.position = Vector3.MoveTowards(Target.position, BallLocation, positionThrowArmSpeed);
         }
 
         yield return null;
@@ -196,7 +225,7 @@ public class JuggleController : CatchDetector
     {
         while(Target.position != GoalPoint)
         {
-            Target.position = Vector3.MoveTowards(Target.position, GoalPoint, 0.2f);
+            Target.position = Vector3.MoveTowards(Target.position, GoalPoint, velocityThrowArmSpeed);
             yield return null;
         }
 
@@ -248,15 +277,36 @@ public class JuggleController : CatchDetector
         objectCaught.useGravity = true;
         positionList.Add(objectCaught.gameObject.transform.position);       // Records ball's initial position
 
-        if (targetArm == 0)
+
+        if (!varyThrowingPower)
         {
-            objectCaught.AddForce(ThrowingPowerLeftwards, ForceMode.Impulse);
-            ballInRightHand = false;
+            if (targetArm == 0)
+            {
+                objectCaught.AddForce(ThrowingPowerLeftwards, ForceMode.Impulse);
+                ballInRightHand = false;
+            }
+            else
+            {
+                objectCaught.AddForce(ThrowingPowerRightwards, ForceMode.Impulse);
+                ballInLeftHand = false;
+            }
         }
         else
         {
-            objectCaught.AddForce(ThrowingPowerRightwards, ForceMode.Impulse);
-            ballInLeftHand = false;
+            Vector3 randomVary = .4f*Random.onUnitSphere;
+            randomVary.x = 0f;
+            randomVary.y = 0f;
+
+            if (targetArm == 0)
+            {
+                objectCaught.AddForce(ThrowingPowerLeftwards+randomVary, ForceMode.Impulse);
+                ballInRightHand = false;
+            }
+            else
+            {
+                objectCaught.AddForce(ThrowingPowerRightwards+randomVary, ForceMode.Impulse);
+                ballInLeftHand = false;
+            }
         }
         yield return null;
         yield return null;
@@ -266,6 +316,6 @@ public class JuggleController : CatchDetector
     }
 
     void SetCountText(){
-        countText.text = "Catch Number: " + totalCount.ToString();
+        countText.text = "Number of Completed Catches: " + count.ToString();
     }
 }
