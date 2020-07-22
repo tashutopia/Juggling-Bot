@@ -31,6 +31,11 @@ public class JuggleController : CatchDetector
     public bool nudgeTest = false;
     public bool varyThrowingPower = false;
 
+    private float timeCounter;
+    public float moveBackSpeed = 6;
+    public float height = 2.5f;
+    public float moveBackMaxDelta = 0.35f;
+
     public static int totalCount = 1;     // which catch we are currently on
     private int targetArm;                // which arm are we throwing to (0 is left, 1 is right)
     private bool ballInLeftHand;
@@ -148,13 +153,15 @@ public class JuggleController : CatchDetector
             {
                 BallBeingThrown.parent = RightTarget;
                 ballInRightHand = true;
-                StartCoroutine(MoveTowardsPoint(RightTarget, RightStartingPoint));
+                // StartCoroutine(MoveTowardsPoint(RightTarget, RightStartingPoint));
+                StartCoroutine(MoveTowardsElliptical(RightTarget, RightStartingPoint));
             }
             else
             {
                 BallBeingThrown.parent = LeftTarget;
                 ballInLeftHand = true;
-                StartCoroutine(MoveTowardsPoint(LeftTarget, LeftStartingPoint));
+                // StartCoroutine(MoveTowardsPoint(LeftTarget, LeftStartingPoint));
+                StartCoroutine(MoveTowardsElliptical(LeftTarget, LeftStartingPoint));
             }
 
             StartCoroutine(ThrowWhenCaught(BallBeingThrown_RB));
@@ -232,9 +239,43 @@ public class JuggleController : CatchDetector
         yield return null;
     }
 
+    IEnumerator MoveTowardsElliptical(Transform Target, Vector3 GoalPoint)
+    {
+        timeCounter = 0;
+
+        float initial = Target.position.z;
+
+        float x = GoalPoint.x;
+        float y;
+        float z = GoalPoint.z;
+
+        while(Target.position.z != GoalPoint.z)
+        {
+            timeCounter += Time.deltaTime * moveBackSpeed;
+
+            if(timeCounter < 0.1 * moveBackSpeed)
+                y = -1 * Mathf.Cos(timeCounter) * height - 3.04f;
+            else if((int)Target.position.y != -3)
+                y = -1 * Mathf.Cos(timeCounter) * height - 3.04f;
+            else
+                y = Target.position.y;
+
+            Target.position = Vector3.MoveTowards(Target.position, new Vector3 (x, y, z), moveBackMaxDelta);
+            yield return null;
+        }
+
+        while(Target.position.y != -3.04f)
+        {
+            Target.position = Vector3.MoveTowards(Target.position, new Vector3 (Target.position.x, -3.04f, Target.position.z), moveBackMaxDelta);
+            yield return null;
+        }
+
+        yield return null;
+    }
 
     IEnumerator ThrowOne() // First Cycle
     {
+        yield return null;
         yield return null;
 
         // Records the balls' initial positions
